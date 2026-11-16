@@ -23,21 +23,25 @@ public class CardDelivery {
     @Test
     void shouldSuccessfulDeliveryRequest() {
 
-        String planning = generateDate(3, "dd.MM.yyyy");
-
+        String planning = generateDate(7, "dd.MM.yyyy");
+        String day = generateDate(7, "d");
 
         Selenide.open("http://localhost:9999/");
-        //SelenideElement form = $$("form").find(Condition.visible);
-        $("[data-test-id='city'] input").setValue("Саратов");
-        $("[data-test-id='date'] input").press(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE).setValue(planning);
+
+        $("[data-test-id='city'] input").setValue("Ка");
+        $$(".menu-item__control") .findBy(Condition.exactText("Казань")).click();
+
+        $("[data-test-id='date'] input").click();
+        $$(".calendar__day").findBy(Condition.exactText(day)).click();
+
         $("[data-test-id='name'] input").setValue("Иванов Степан");
         $("[data-test-id='phone'] input").setValue("+79210001111");
         $("[data-test-id='agreement']").click();
         $$("button").findBy(Condition.exactText("Забронировать")).click();
+
         $$("[data-test-id='notification'] .notification__content")
                 .findBy(Condition.visible)
                 .shouldHave(Condition.text("Встреча успешно забронирована на "), Duration.ofSeconds(15))
                 .shouldHave(Condition.text(planning), Duration.ofSeconds(15));
     }
-
 }
